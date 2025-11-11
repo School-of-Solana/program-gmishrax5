@@ -8,7 +8,7 @@ Solify is a revolutionary decentralized music platform built on Solana blockchai
 
 - **👤 User Profiles**: Create personalized profiles with unique usernames
 - **🎵 Track Management**: Share music with customizable URIs and titles
-- **📋 Playlist Creation**: Curate collections of tracks for different moods and themes
+- **📋 Playlist Creation**: Curate collections of tracks for different moods and theme
 - **❤️ Like System**: Show appreciation for tracks and boost visibility
 - **⚡ Efficient Storage**: Optimized on-chain data structures using PDAs
 - **🔒 Secure Ownership**: Strong validation ensures only owners can modify their content
