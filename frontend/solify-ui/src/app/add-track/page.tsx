@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { SystemProgram } from '@solana/web3.js';
 import NavBar from '@/components/NavBar';
+import { useSolifyProgram, findUserProfilePDA, findTrackPDA } from '@/utils/solana';
 
 export default function AddTrackPage() {
   const { publicKey, connected } = useWallet();
@@ -10,16 +12,46 @@ export default function AddTrackPage() {
   const [uri, setUri] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState('');
+  
+  // Get the Solify program
+  const program = useSolifyProgram();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim() || !uri.trim()) return;
+    if (!title.trim() || !uri.trim() || !publicKey || !program) return;
     
     setIsLoading(true);
-    // Here we would call the add_track instruction
-    // For now, we'll just simulate it
-    setTimeout(() => {
-      setIsLoading(false);
+    setError('');
+    
+    try {
+      // Find the user profile PDA
+      const [userProfilePda] = await findUserProfilePDA(publicKey);
+      
+      // Fetch the user profile to get the track count
+      const userProfile = await program.account.userProfile.fetch(userProfilePda);
+      const trackCount = userProfile.trackCount.toNumber();
+      
+      // Find the track PDA
+      const [trackPda] = await findTrackPDA(publicKey, trackCount);
+      
+      // Call the add_track instruction
+      const tx = await program.methods
+        .addTrack(uri, title)
+        .accounts({
+          authority: publicKey,
+          userProfile: userProfilePda,
+          track: trackPda,
+          systemProgram: SystemProgram.programId,
+        })
+        .rpc();
+      
+      console.log('Transaction signature:', tx);
+      
+      // Wait for confirmation
+      await program.provider.connection.confirmTransaction(tx);
+      
+      // Update state
       setIsSuccess(true);
       setTitle('');
       setUri('');
@@ -28,7 +60,12 @@ export default function AddTrackPage() {
       setTimeout(() => {
         setIsSuccess(false);
       }, 5000);
-    }, 1500);
+    } catch (err) {
+      console.error('Error adding track:', err);
+      setError('Failed to add track. Make sure you have a user profile and enough SOL.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (!connected) {
@@ -54,6 +91,12 @@ export default function AddTrackPage() {
         {isSuccess && (
           <div className="bg-green-800 text-white p-4 rounded-lg mb-6">
             Track added successfully!
+          </div>
+        )}
+        
+        {error && (
+          <div className="bg-red-800 text-white p-4 rounded-lg mb-6">
+            {error}
           </div>
         )}
         
