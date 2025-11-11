@@ -1,7 +1,6 @@
 import { Connection, PublicKey, clusterApiUrl, Commitment } from '@solana/web3.js';
 import { Program, AnchorProvider, Idl } from '@coral-xyz/anchor';
 import { useEffect, useState } from 'react';
-// @ts-ignore - Ignore missing type declarations
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 
 // Import the IDL from the Anchor program
@@ -61,10 +60,13 @@ export function useSolifyProgram() {
     try {
       const programId = getProgramId();
       console.log('Program ID:', programId.toString());
-      console.log('IDL:', idl.metadata ? idl.metadata.address : 'No metadata address');
       
-      // @ts-ignore - Ignore type errors for deployment
-      const solifyProgram = new Program(idl, programId, provider);
+      // Bypass TypeScript errors with any type
+      const solifyProgram = new Program(
+        idl as any, 
+        programId as any, 
+        provider as any
+      );
       console.log('Program created successfully');
       setProgram(solifyProgram);
     } catch (error) {

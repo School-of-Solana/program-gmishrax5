@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic';
 import { clusterApiUrl } from '@solana/web3.js';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider as SolanaWalletProvider } from '@solana/wallet-adapter-react';
-import { PhantomWalletAdapter, SolflareWalletAdapter, TorusWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 
 // Use dynamic import for WalletModalProvider
 const WalletModalProvider = dynamic(
@@ -22,19 +22,18 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   // You can also provide a custom RPC endpoint
   const endpoint = useMemo(() => {
-    // Using Helius RPC if available, otherwise fallback to Solana's public RPC
-    return process.env.NEXT_PUBLIC_HELIUS_RPC || clusterApiUrl(network);
+    const url = process.env.NEXT_PUBLIC_HELIUS_RPC;
+    return url || clusterApiUrl(network);
   }, [network]);
 
-  // @solana/wallet-adapter-wallets includes all the adapters but supports tree shaking
-  // so only the wallets you configure here will be compiled into your application
+  // @solana/wallet-adapter-wallets includes all the adapters but supports tree shaking --
+  // Only the wallets you configure here will be compiled into your application
   const wallets = useMemo(
     () => [
       new PhantomWalletAdapter(),
       new SolflareWalletAdapter(),
-      new TorusWalletAdapter()
     ],
-    [network]
+    []
   );
 
   return (
