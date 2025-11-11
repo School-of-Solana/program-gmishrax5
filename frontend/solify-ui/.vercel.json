@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
+  "env": {
+    "NEXT_PUBLIC_HELIUS_RPC": "https://api.devnet.solana.com",
+    "NEXT_PUBLIC_PROGRAM_ID": "Dqm43aWDpiFr7cEk37Xnud7NPPo18dCBCkfN4hLJWHnT",
+    "NEXT_PUBLIC_COMMITMENT": "confirmed"
+  }
+}

@@ -1,0 +1,12 @@
+[programs.devnet]
+solify = "Dqm43aWDpiFr7cEk37Xnud7NPPo18dCBCkfN4hLJWHnT"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "devnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "ts-mocha -p tsconfig.json -t 1000000 tests/**/*.ts"
