@@ -7,7 +7,11 @@
   NEXT_PUBLIC_PROGRAM_ID = "Dqm43aWDpiFr7cEk37Xnud7NPPo18dCBCkfN4hLJWHnT"
   NEXT_PUBLIC_COMMITMENT = "confirmed"
 
+# Next.js specific settings
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/.netlify/functions/next"
   status = 200
